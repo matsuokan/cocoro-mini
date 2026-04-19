@@ -1,0 +1,433 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* ========================================
+   カスタムプロパティ（CSS変数）
+   Apple Mac mini準拠カラーシステム
+   ======================================== */
+:root {
+  /* ブランドカラー */
+  --color-accent: #00d4aa;          /* cocoro mini ティール （ブランド固有） */
+  --color-accent-blue: #0071e3;     /* Apple Blue — CTAボタン */
+  --color-accent-teal: #00d4aa;
+  --color-accent-orange: #f7924f;
+  --color-accent-purple: #d44faf;
+
+  /* ライトモード背景（Apple準拠） */
+  --color-bg: #f5f5f7;             /* Apple Light Gray */
+  --color-bg-white: #ffffff;        /* ピュアホワイト */
+  --color-bg-dark: #1d1d1f;        /* Apple Black sections */
+  --color-bg-darkest: #000000;      /* Hero など最暗部 */
+
+  /* テキスト */
+  --color-text: #1d1d1f;           /* Apple near-black */
+  --color-text-secondary: #6e6e73;  /* Apple gray */
+  --color-text-tertiary: #86868b;   /* Apple lighter gray */
+  --color-text-white: #f5f5f7;     /* 暗背景上のテキスト */
+
+  /* 旧変数（後方互換） */
+  --color-primary: #1d1d1f;
+  --color-muted: #6e6e73;
+  --color-border: #d2d2d7;         /* Apple border */
+  --color-border-dark: rgba(255,255,255,0.12);
+  --color-card: #ffffff;
+
+  --font-sans: "Noto Sans JP", "DM Sans", system-ui, sans-serif;
+  --font-display: "DM Sans", "Noto Sans JP", system-ui, sans-serif;
+
+  --radius-card: 18px;
+  --radius-btn: 980px;              /* Apple の全丸ボタン */
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.14);
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+
+/* ========================================
+   ベースリセット
+   ======================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ========================================
+   アニメーション
+   ======================================== */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 170, 0.25); }
+  50% { box-shadow: 0 0 50px rgba(0, 212, 170, 0.55); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* ========================================
+   スクロール監視アニメーション
+   ======================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ========================================
+   グラスモーフィズム
+   ======================================== */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================
+   ボタン
+   ======================================== */
+/* Apple準拠: ピル型の青CTAボタン */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  background: var(--color-accent-blue);
+  color: #ffffff;
+  font-weight: 500;
+  font-family: var(--font-display);
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+}
+
+.btn-primary:hover {
+  background: #0077ed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary:active {
+  background: #006edb;
+}
+
+/* Apple準拠: ライトモード用 半透明アウトラインボタン */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+  font-weight: 500;
+  font-family: var(--font-display);
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: none;
+}
+
+/* ダーク背景上のセカンダリ */
+.btn-secondary-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-weight: 500;
+  font-family: var(--font-display);
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+}
+
+.btn-secondary-dark:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* ティールアウトライン（ブランド専用） */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: transparent;
+  color: var(--color-accent);
+  font-weight: 500;
+  font-family: var(--font-display);
+  border-radius: var(--radius-btn);
+  border: 1.5px solid var(--color-accent);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+}
+
+.btn-outline:hover {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+/* ========================================
+   セクション共通
+   ======================================== */
+.section {
+  padding: 100px 0;
+}
+
+/* Apple: ダークセクション（黒） */
+.section-dark {
+  background-color: #1d1d1f;
+  color: #f5f5f7;
+}
+
+.section-deeper {
+  background: #000000;
+  color: #f5f5f7;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  color: var(--color-muted);
+  line-height: 1.8;
+  max-width: 600px;
+}
+
+.section-subtitle-white {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.8;
+  max-width: 600px;
+}
+
+/* ========================================
+   グリッド
+   ======================================== */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+/* ========================================
+   カード
+   ======================================== */
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+}
+
+.card-dark {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-card);
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+}
+
+.card-dark:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(0, 212, 170, 0.3);
+  transform: translateY(-4px);
+}
+
+/* ========================================
+   アクセントライン
+   ======================================== */
+.accent-line {
+  width: 48px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin-bottom: 24px;
+}
+
+/* ========================================
+   スクロールバー
+   ======================================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* ========================================
+   フォーカス
+   ======================================== */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ========================================
+   セレクション
+   ======================================== */
+::selection {
+  background: rgba(0, 212, 170, 0.2);
+  color: var(--color-text);
+}
